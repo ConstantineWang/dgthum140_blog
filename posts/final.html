@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>myblog - Predicting Student Dropout Rates: An Examination of Student Characteristics and Economic Indicators</title>
+<title>myblog - Student Dropout: An Examination of Student Characteristics and Economic Indicators</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,6 +93,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -140,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Predicting Student Dropout Rates: An Examination of Student Characteristics and Economic Indicators</h1>
+      <h1 class="title">Student Dropout: An Examination of Student Characteristics and Economic Indicators</h1>
                       </div>
   </div>
     
@@ -164,34 +167,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This project aims to predict student dropout and academic success based on various student characteristics and academic indicators.</p>
+<p><img src="https://i.ytimg.com/vi/S5NKx_5EW-w/maxresdefault.jpg" class="img-fluid"></p>
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data:</h3>
 <p>The dataset used in this project comes from Kaggle, https://www.kaggle.com/datasets/naveenkumar20bps1137/predict-students-dropout-and-academic-success?select=dataset.csv, detailing various aspects of a student’s personal background, academic performance, economic indicators, and more. To be more specific, the dataset includes variables such as marital status, nationality, parents’ qualifications and occupations, debtor status, age at enrollment, curricular units performance, among others. Additionally, it includes some economic indicators such as unemployment rate, inflation rate, and GDP, which provides a broader context to the student’s situation.</p>
 </section>
 <section id="motivation" class="level3">
 <h3 class="anchored" data-anchor-id="motivation">Motivation:</h3>
-<p>As a first-generation international student, I am deeply intrigued by how these diverse backgrounds may shape the academic outcomes of students in a broad sense. In addition to discerning any potential correlations between these student characteristics and dropout rates, I am also keen on creating a predictive model for students’ academic success.</p>
+<p>As a international student, I am deeply intrigued by how these diverse backgrounds may shape the academic outcomes of students in a broad sense. In addition to discerning any potential correlations between these student characteristics and dropout rates, I am also keen on creating a predictive model for students’ academic success.</p>
 </section>
 <section id="research-questions" class="level3">
 <h3 class="anchored" data-anchor-id="research-questions">Research Questions:</h3>
-<p>The main question this project seeks to address is: - “Can we predict whether a student will drop out or graduate based on their characteristics?”</p>
-<section id="subsidiary-questions-include" class="level4">
-<h4 class="anchored" data-anchor-id="subsidiary-questions-include">Subsidiary questions include:</h4>
 <ul>
-<li>“Does a correlation exist between the likelihood of dropping out and certain academic attributes”</li>
+<li>Does our data confirm traditional beliefs about the features that impact on students’ academic success?</li>
+<li>What shared traits can we identify among students who tend to drop out of universities?</li>
+<li>Does any overarching societal trait such as GDP and inflation rate significantly influence a student’s academic success?</li>
+<li>Beyond these seemingly independent factors, it’s important to consider their potential multicollinearity. Are they interrelated, affecting our analysis?</li>
 </ul>
-<div class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install packages</span></span>
+</section>
+<section id="install-required-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-required-packages">Install Required Packages</h2>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # install packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install kaggle</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install pandas</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install matplotlib</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># set the api env</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify credentials</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'KAGGLE_USERNAME'</span>] <span class="op">=</span> <span class="st">"constantinewang"</span> <span class="co"># replace with your Kaggle username</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'KAGGLE_KEY'</span>] <span class="op">=</span> <span class="st">"965a8311015c3039e89e307e4cae5ee6"</span> <span class="co"># replace with your Kaggle key</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install seaborn</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install plotly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Requirement already satisfied: kaggle in /opt/conda/lib/python3.10/site-packages (1.5.16)
 Requirement already satisfied: six&gt;=1.10 in /opt/conda/lib/python3.10/site-packages (from kaggle) (1.16.0)
@@ -205,37 +207,78 @@ Requirement already satisfied: bleach in /opt/conda/lib/python3.10/site-packages
 Requirement already satisfied: webencodings in /opt/conda/lib/python3.10/site-packages (from bleach-&gt;kaggle) (0.5.1)
 Requirement already satisfied: text-unidecode&gt;=1.3 in /opt/conda/lib/python3.10/site-packages (from python-slugify-&gt;kaggle) (1.3)
 Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /opt/conda/lib/python3.10/site-packages (from requests-&gt;kaggle) (3.0.1)
-Requirement already satisfied: idna&lt;4,&gt;=2.5 in /opt/conda/lib/python3.10/site-packages (from requests-&gt;kaggle) (3.4)</code></pre>
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /opt/conda/lib/python3.10/site-packages (from requests-&gt;kaggle) (3.4)
+Requirement already satisfied: pandas in /opt/conda/lib/python3.10/site-packages (1.5.3)
+Requirement already satisfied: python-dateutil&gt;=2.8.1 in /opt/conda/lib/python3.10/site-packages (from pandas) (2.8.2)
+Requirement already satisfied: pytz&gt;=2020.1 in /opt/conda/lib/python3.10/site-packages (from pandas) (2023.3)
+Requirement already satisfied: numpy&gt;=1.21.0 in /opt/conda/lib/python3.10/site-packages (from pandas) (1.25.0)
+Requirement already satisfied: six&gt;=1.5 in /opt/conda/lib/python3.10/site-packages (from python-dateutil&gt;=2.8.1-&gt;pandas) (1.16.0)
+Requirement already satisfied: matplotlib in /opt/conda/lib/python3.10/site-packages (3.7.2)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (1.1.0)
+Requirement already satisfied: cycler&gt;=0.10 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (0.11.0)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (4.40.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (1.4.4)
+Requirement already satisfied: numpy&gt;=1.20 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (1.25.0)
+Requirement already satisfied: packaging&gt;=20.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (23.0)
+Requirement already satisfied: pillow&gt;=6.2.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (10.0.0)
+Requirement already satisfied: pyparsing&lt;3.1,&gt;=2.3.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (3.0.9)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /opt/conda/lib/python3.10/site-packages (from matplotlib) (2.8.2)
+Requirement already satisfied: six&gt;=1.5 in /opt/conda/lib/python3.10/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib) (1.16.0)
+Requirement already satisfied: seaborn in /opt/conda/lib/python3.10/site-packages (0.12.2)
+Requirement already satisfied: numpy!=1.24.0,&gt;=1.17 in /opt/conda/lib/python3.10/site-packages (from seaborn) (1.25.0)
+Requirement already satisfied: pandas&gt;=0.25 in /opt/conda/lib/python3.10/site-packages (from seaborn) (1.5.3)
+Requirement already satisfied: matplotlib!=3.6.1,&gt;=3.1 in /opt/conda/lib/python3.10/site-packages (from seaborn) (3.7.2)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (1.1.0)
+Requirement already satisfied: cycler&gt;=0.10 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (0.11.0)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (4.40.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (1.4.4)
+Requirement already satisfied: packaging&gt;=20.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (23.0)
+Requirement already satisfied: pillow&gt;=6.2.0 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (10.0.0)
+Requirement already satisfied: pyparsing&lt;3.1,&gt;=2.3.1 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (3.0.9)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /opt/conda/lib/python3.10/site-packages (from matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (2.8.2)
+Requirement already satisfied: pytz&gt;=2020.1 in /opt/conda/lib/python3.10/site-packages (from pandas&gt;=0.25-&gt;seaborn) (2023.3)
+Requirement already satisfied: six&gt;=1.5 in /opt/conda/lib/python3.10/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib!=3.6.1,&gt;=3.1-&gt;seaborn) (1.16.0)
+Requirement already satisfied: plotly in /opt/conda/lib/python3.10/site-packages (5.15.0)
+Requirement already satisfied: tenacity&gt;=6.2.0 in /opt/conda/lib/python3.10/site-packages (from plotly) (8.2.2)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.10/site-packages (from plotly) (23.0)</code></pre>
 </div>
 </div>
 </section>
+<section id="setup-api-env" class="level2">
+<h2 class="anchored" data-anchor-id="setup-api-env">Setup API env</h2>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#specify credentials</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'KAGGLE_USERNAME'</span>] <span class="op">=</span> <span class="st">"constantinewang"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'KAGGLE_KEY'</span>] <span class="op">=</span> <span class="st">"965a8311015c3039e89e307e4cae5ee6"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="import-data-and-summary-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="import-data-and-summary-statistics">Import data and summary statistics</h2>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> kaggle.api.kaggle_api_extended <span class="im">import</span> KaggleApi</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the API</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>api <span class="op">=</span> KaggleApi()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>api.authenticate()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#download dataset</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>api.dataset_download_files(<span class="st">'naveenkumar20bps1137/predict-students-dropout-and-academic-success'</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">'predict-students-dropout-and-academic-success.zip'</span>, <span class="st">'r'</span>) <span class="im">as</span> zip_ref:</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#load dataset into a pandas DataFrame</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'dataset.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="explore-the-dataset-print-out-summary" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-dataset-print-out-summary">Explore the dataset: Print out summary</h2>
 <div class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> kaggle.api.kaggle_api_extended <span class="im">import</span> KaggleApi</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the API</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>api <span class="op">=</span> KaggleApi()</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>api.authenticate()</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#download dataset</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>api.dataset_download_files(<span class="st">'naveenkumar20bps1137/predict-students-dropout-and-academic-success'</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#unzip the downloaded dataset</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(<span class="st">'predict-students-dropout-and-academic-success.zip'</span>, <span class="st">'r'</span>) <span class="im">as</span> zip_ref:</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    zip_ref.extractall()</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#load dataset into a pandas DataFrame</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'dataset.csv'</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#dataset info</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.info())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.info())</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.describe())</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 4424 entries, 0 to 4423
@@ -279,335 +322,716 @@ Data columns (total 35 columns):
  34  Target                                          4424 non-null   object 
 dtypes: float64(5), int64(29), object(1)
 memory usage: 1.2+ MB
-None</code></pre>
+None
+       Marital status  Application mode  Application order       Course  \
+count     4424.000000       4424.000000        4424.000000  4424.000000   
+mean         1.178571          6.886980           1.727848     9.899186   
+std          0.605747          5.298964           1.313793     4.331792   
+min          1.000000          1.000000           0.000000     1.000000   
+25%          1.000000          1.000000           1.000000     6.000000   
+50%          1.000000          8.000000           1.000000    10.000000   
+75%          1.000000         12.000000           2.000000    13.000000   
+max          6.000000         18.000000           9.000000    17.000000   
+
+       Daytime/evening attendance  Previous qualification  Nacionality  \
+count                 4424.000000             4424.000000  4424.000000   
+mean                     0.890823                2.531420     1.254521   
+std                      0.311897                3.963707     1.748447   
+min                      0.000000                1.000000     1.000000   
+25%                      1.000000                1.000000     1.000000   
+50%                      1.000000                1.000000     1.000000   
+75%                      1.000000                1.000000     1.000000   
+max                      1.000000               17.000000    21.000000   
+
+       Mother's qualification  Father's qualification  Mother's occupation  \
+count             4424.000000             4424.000000          4424.000000   
+mean                12.322107               16.455244             7.317812   
+std                  9.026251               11.044800             3.997828   
+min                  1.000000                1.000000             1.000000   
+25%                  2.000000                3.000000             5.000000   
+50%                 13.000000               14.000000             6.000000   
+75%                 22.000000               27.000000            10.000000   
+max                 29.000000               34.000000            32.000000   
+
+       ...  Curricular units 1st sem (without evaluations)  \
+count  ...                                     4424.000000   
+mean   ...                                        0.137658   
+std    ...                                        0.690880   
+min    ...                                        0.000000   
+25%    ...                                        0.000000   
+50%    ...                                        0.000000   
+75%    ...                                        0.000000   
+max    ...                                       12.000000   
+
+       Curricular units 2nd sem (credited)  \
+count                          4424.000000   
+mean                              0.541817   
+std                               1.918546   
+min                               0.000000   
+25%                               0.000000   
+50%                               0.000000   
+75%                               0.000000   
+max                              19.000000   
+
+       Curricular units 2nd sem (enrolled)  \
+count                          4424.000000   
+mean                              6.232143   
+std                               2.195951   
+min                               0.000000   
+25%                               5.000000   
+50%                               6.000000   
+75%                               7.000000   
+max                              23.000000   
+
+       Curricular units 2nd sem (evaluations)  \
+count                             4424.000000   
+mean                                 8.063291   
+std                                  3.947951   
+min                                  0.000000   
+25%                                  6.000000   
+50%                                  8.000000   
+75%                                 10.000000   
+max                                 33.000000   
+
+       Curricular units 2nd sem (approved)  Curricular units 2nd sem (grade)  \
+count                          4424.000000                       4424.000000   
+mean                              4.435805                         10.230206   
+std                               3.014764                          5.210808   
+min                               0.000000                          0.000000   
+25%                               2.000000                         10.750000   
+50%                               5.000000                         12.200000   
+75%                               6.000000                         13.333333   
+max                              20.000000                         18.571429   
+
+       Curricular units 2nd sem (without evaluations)  Unemployment rate  \
+count                                     4424.000000        4424.000000   
+mean                                         0.150316          11.566139   
+std                                          0.753774           2.663850   
+min                                          0.000000           7.600000   
+25%                                          0.000000           9.400000   
+50%                                          0.000000          11.100000   
+75%                                          0.000000          13.900000   
+max                                         12.000000          16.200000   
+
+       Inflation rate          GDP  
+count     4424.000000  4424.000000  
+mean         1.228029     0.001969  
+std          1.382711     2.269935  
+min         -0.800000    -4.060000  
+25%          0.300000    -1.700000  
+50%          1.400000     0.320000  
+75%          2.600000     1.790000  
+max          3.700000     3.510000  
+
+[8 rows x 34 columns]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Marital status</th>
+<th data-quarto-table-cell-role="th">Application mode</th>
+<th data-quarto-table-cell-role="th">Application order</th>
+<th data-quarto-table-cell-role="th">Course</th>
+<th data-quarto-table-cell-role="th">Daytime/evening attendance</th>
+<th data-quarto-table-cell-role="th">Previous qualification</th>
+<th data-quarto-table-cell-role="th">Nacionality</th>
+<th data-quarto-table-cell-role="th">Mother's qualification</th>
+<th data-quarto-table-cell-role="th">Father's qualification</th>
+<th data-quarto-table-cell-role="th">Mother's occupation</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (credited)</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (enrolled)</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (evaluations)</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (approved)</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (grade)</th>
+<th data-quarto-table-cell-role="th">Curricular units 2nd sem (without evaluations)</th>
+<th data-quarto-table-cell-role="th">Unemployment rate</th>
+<th data-quarto-table-cell-role="th">Inflation rate</th>
+<th data-quarto-table-cell-role="th">GDP</th>
+<th data-quarto-table-cell-role="th">Target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>8</td>
+<td>5</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>13</td>
+<td>10</td>
+<td>6</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0.000000</td>
+<td>0</td>
+<td>10.8</td>
+<td>1.4</td>
+<td>1.74</td>
+<td>Dropout</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>6</td>
+<td>1</td>
+<td>11</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>4</td>
+<td>...</td>
+<td>0</td>
+<td>6</td>
+<td>6</td>
+<td>6</td>
+<td>13.666667</td>
+<td>0</td>
+<td>13.9</td>
+<td>-0.3</td>
+<td>0.79</td>
+<td>Graduate</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>1</td>
+<td>5</td>
+<td>5</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>22</td>
+<td>27</td>
+<td>10</td>
+<td>...</td>
+<td>0</td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>0.000000</td>
+<td>0</td>
+<td>10.8</td>
+<td>1.4</td>
+<td>1.74</td>
+<td>Dropout</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>8</td>
+<td>2</td>
+<td>15</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>23</td>
+<td>27</td>
+<td>6</td>
+<td>...</td>
+<td>0</td>
+<td>6</td>
+<td>10</td>
+<td>5</td>
+<td>12.400000</td>
+<td>0</td>
+<td>9.4</td>
+<td>-0.8</td>
+<td>-3.12</td>
+<td>Graduate</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2</td>
+<td>12</td>
+<td>1</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>22</td>
+<td>28</td>
+<td>10</td>
+<td>...</td>
+<td>0</td>
+<td>6</td>
+<td>6</td>
+<td>6</td>
+<td>13.000000</td>
+<td>0</td>
+<td>13.9</td>
+<td>-0.3</td>
+<td>0.79</td>
+<td>Graduate</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 35 columns</p>
+</div>
 </div>
 </div>
 </section>
-<section id="exploratory-visualizations" class="level1">
-<h1>Exploratory visualizations</h1>
+<section id="explore-the-dataset-exploratory-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-dataset-exploratory-visualizations">Explore the dataset: Exploratory visualizations</h2>
 <div class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> column <span class="kw">in</span> df.columns:</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#for columns that are numeric type, we create hitogram</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pd.api.types.is_numeric_dtype(df[column]):</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        df[column].hist(bins<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        plt.title(column)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        plt.xlabel(column)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        plt.ylabel(<span class="st">'Frequency'</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        plt.grid(<span class="va">True</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        plt.show()</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#for columns that are categorical type, we create bar plot</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        df[column].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        plt.title(column)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        plt.xlabel(column)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        plt.ylabel(<span class="st">'Count'</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        plt.grid(<span class="va">True</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-3.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-4.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-5.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-6.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-7.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-8.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-9.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-10.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-11.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-12.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-13.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-14.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-15.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-16.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-17.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-18.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-19.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-20.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-21.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-22.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-23.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-24.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-25.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-26.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-27.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-28.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-29.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-30.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-31.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-32.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-33.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-34.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-4-output-35.png" class="img-fluid"></p>
-</div>
-</div>
-<section id="clean-the-data-before-doing-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="clean-the-data-before-doing-visualization">Clean the data before doing visualization</h2>
-<p>The dataset has already cut off null value and encode categorical columns.</p>
-<div class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We do not need the record that is currently enrolled</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">!=</span> <span class="st">'Enrolled'</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'Target'</span>].unique())</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># cut off outliers that have a unusual age</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>numerical_cols <span class="op">=</span> [<span class="st">'Age at enrollment'</span>,]</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> numerical_cols:</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    Q1 <span class="op">=</span> df[col].quantile(<span class="fl">0.25</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    Q3 <span class="op">=</span> df[col].quantile(<span class="fl">0.75</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#only keep rows in the dataframe that do not contain outliers</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df[<span class="op">~</span>((df[col] <span class="op">&lt;</span> (Q1 <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> IQR)) <span class="op">|</span> (df[col] <span class="op">&gt;</span> (Q3 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> IQR)))]</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#check the new min max</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Min Age: "</span>, df[<span class="st">'Age at enrollment'</span>].<span class="bu">min</span>())</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Max Age: "</span>, df[<span class="st">'Age at enrollment'</span>].<span class="bu">max</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>['Dropout' 'Graduate']
-Min Age:  17
-Max Age:  34</code></pre>
-</div>
-</div>
-<section id="visualization-1-the-relation-between-enrollment-age-and-student-status" class="level3">
-<h3 class="anchored" data-anchor-id="visualization-1-the-relation-between-enrollment-age-and-student-status">Visualization 1: The relation between enrollment age and student status</h3>
-<p>Upon examining the visualizations, it becomes clear that the probability of successful graduation is notably higher for students who enroll at a younger age, This trend of increased successful graduations with lower enrollment age is particularly pronounced up to the age of 26. After age of 26 it becomes less distinct.</p>
-<div class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Histogram of Age at enrollment with Student Status</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>dropout_age <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Dropout'</span>][<span class="st">'Age at enrollment'</span>]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>graduate_age <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Graduate'</span>][<span class="st">'Age at enrollment'</span>]</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.hist([dropout_age, graduate_age], label<span class="op">=</span>[<span class="st">'Dropout'</span>, <span class="st">'Graduate'</span>])</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Age at Enrollment'</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Age at Enrollment Distribution by Student Status'</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#create bins for ages</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> <span class="bu">range</span>(df[<span class="st">'Age at enrollment'</span>].<span class="bu">min</span>(), df[<span class="st">'Age at enrollment'</span>].<span class="bu">max</span>()<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># create a DataFrame for dropouts</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Dropout'</span>][<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>).rename(<span class="st">'Dropout'</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">/=</span> df[<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">*=</span> <span class="dv">100</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># percentage</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#create a DataFrame for graduates</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Graduate'</span>][<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>).rename(<span class="st">'Graduate'</span>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">/=</span> df[<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">*=</span> <span class="dv">100</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co"># combine them into a single DataFrame</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>percentage_df <span class="op">=</span> pd.concat([dropout_df, graduate_df], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>percentage_df.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Age at Enrollment'</span>)</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage (%)'</span>)</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Percentage of Dropout and Graduate Students by Age at Enrollment'</span>)</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#total numbers</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>num_of_cols <span class="op">=</span> df.shape[<span class="dv">1</span>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#make alignment&amp;size</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>subplot_rows <span class="op">=</span> <span class="bu">int</span>(np.ceil(np.sqrt(num_of_cols)))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>subplot_cols <span class="op">=</span> <span class="bu">int</span>(np.ceil(num_of_cols <span class="op">/</span> subplot_rows))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">15</span>))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, column <span class="kw">in</span> <span class="bu">enumerate</span>(df.columns, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    plt.subplot(subplot_rows, subplot_cols, idx)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">#for columns that are numeric type, we create histogram</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pd.api.types.is_numeric_dtype(df[column]):</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        df[column].hist(bins<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        plt.title(column)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        plt.xlabel(column)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        plt.grid(<span class="va">True</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">#for columns that are categorical type, we create bar plot</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        df[column].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        plt.title(column)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        plt.xlabel(column)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        plt.ylabel(<span class="st">'Count'</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        plt.grid(<span class="va">True</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="final_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
+</div>
+</section>
+<section id="cleanprocess-the-data-drop-null-value" class="level2">
+<h2 class="anchored" data-anchor-id="cleanprocess-the-data-drop-null-value">Clean&amp;Process the data: drop null value</h2>
+<p>We can see that the Target column has not been encoded yet. Then, we want to check if there is any null/missing value.</p>
+<p>Good news! we do not have any null value.</p>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check if there are null/missing values</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>is_null <span class="op">=</span> df.isnull().<span class="bu">sum</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(is_null)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marital status                                    0
+Application mode                                  0
+Application order                                 0
+Course                                            0
+Daytime/evening attendance                        0
+Previous qualification                            0
+Nacionality                                       0
+Mother's qualification                            0
+Father's qualification                            0
+Mother's occupation                               0
+Father's occupation                               0
+Displaced                                         0
+Educational special needs                         0
+Debtor                                            0
+Tuition fees up to date                           0
+Gender                                            0
+Scholarship holder                                0
+Age at enrollment                                 0
+International                                     0
+Curricular units 1st sem (credited)               0
+Curricular units 1st sem (enrolled)               0
+Curricular units 1st sem (evaluations)            0
+Curricular units 1st sem (approved)               0
+Curricular units 1st sem (grade)                  0
+Curricular units 1st sem (without evaluations)    0
+Curricular units 2nd sem (credited)               0
+Curricular units 2nd sem (enrolled)               0
+Curricular units 2nd sem (evaluations)            0
+Curricular units 2nd sem (approved)               0
+Curricular units 2nd sem (grade)                  0
+Curricular units 2nd sem (without evaluations)    0
+Unemployment rate                                 0
+Inflation rate                                    0
+GDP                                               0
+Target                                            0
+dtype: int64</code></pre>
 </div>
 </div>
 </section>
-<section id="visualization-2-the-relation-between-first-semester-grade-and-student-status" class="level3">
-<h3 class="anchored" data-anchor-id="visualization-2-the-relation-between-first-semester-grade-and-student-status">Visualization 2: The relation between first semester grade and student status</h3>
-<p>Upon examining the box plot, it becomes clear that the probability of successful graduation is notably higher for students who have a better grade at first semester.</p>
+<section id="cleanprocess-the-data-remove-unrelated-values" class="level2">
+<h2 class="anchored" data-anchor-id="cleanprocess-the-data-remove-unrelated-values">Clean&amp;Process the data: remove unrelated values</h2>
+<p>Because we want to research on if a student either drop out or graduate, there is no need to include “enrolled” student.</p>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">!=</span> <span class="st">'Enrolled'</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'Target'</span>].unique())</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>target_mapping <span class="op">=</span> {<span class="st">"Dropout"</span>: <span class="dv">0</span>, <span class="st">"Graduate"</span>: <span class="dv">1</span>}</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Target_encoded'</span>] <span class="op">=</span> df[<span class="st">'Target'</span>].<span class="bu">map</span>(target_mapping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Dropout' 'Graduate']</code></pre>
+</div>
+</div>
+</section>
+<section id="cleanprocess-the-data-remove-outliers" class="level2">
+<h2 class="anchored" data-anchor-id="cleanprocess-the-data-remove-outliers">Clean&amp;Process the data: remove outliers</h2>
+<p>In this instance, our aim is to exclude students who exhibit atypical enrollment ages, as they are not representative of the overall student population.</p>
 <div class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Boxplot of 'Curricular units 1st sem (grade)' divided by Student Status</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dropout_grade <span class="op">=</span> df[df[<span class="st">'Target'</span>]<span class="op">==</span><span class="st">'Dropout'</span>][<span class="st">'Curricular units 1st sem (grade)'</span>]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>graduate_grade <span class="op">=</span> df[df[<span class="st">'Target'</span>]<span class="op">==</span><span class="st">'Graduate'</span>][<span class="st">'Curricular units 1st sem (grade)'</span>]</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.boxplot([dropout_grade, graduate_grade], labels<span class="op">=</span>[<span class="st">'Dropout'</span>, <span class="st">'Graduate'</span>])</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'First Semester Grade Distribution by Student Status'</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'First Semester Grade'</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cut off outliers that have a unusual age</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>numerical_cols <span class="op">=</span> [<span class="st">'Age at enrollment'</span>,]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> numerical_cols:</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    Q1 <span class="op">=</span> df[col].quantile(<span class="fl">0.25</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    Q3 <span class="op">=</span> df[col].quantile(<span class="fl">0.75</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#only keep rows in the dataframe that do not contain outliers</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df[<span class="op">~</span>((df[col] <span class="op">&lt;</span> (Q1 <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> IQR)) <span class="op">|</span> (df[col] <span class="op">&gt;</span> (Q3 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> IQR)))]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#check the new min max</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Min Age: "</span>, df[<span class="st">'Age at enrollment'</span>].<span class="bu">min</span>())</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Max Age: "</span>, df[<span class="st">'Age at enrollment'</span>].<span class="bu">max</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Min Age:  17
+Max Age:  34</code></pre>
 </div>
 </div>
 </section>
-<section id="visualization-3-the-relation-between-daytimeevening-attendance-and-student-status" class="level3">
-<h3 class="anchored" data-anchor-id="visualization-3-the-relation-between-daytimeevening-attendance-and-student-status">Visualization 3: The relation between Daytime/Evening Attendance and student status</h3>
-<p>Upon examining the box plot, it becomes clear that the probability of successful graduation is notably higher for students who attend classes at daytime.</p>
+<section id="answer-to-q1-investigating-traditionally-believed-predictors" class="level2">
+<h2 class="anchored" data-anchor-id="answer-to-q1-investigating-traditionally-believed-predictors">Answer to Q1: Investigating Traditionally Believed Predictors</h2>
+<p>In this section, we aim to examine some traditionally considered factors influencing student outcomes. By visualizing these elements, we can empirically test our pre-existing assumptions about the key drivers of student success or failure.</p>
+<section id="assumption-1-influence-of-age-at-enrollment-on-academic-success" class="level3">
+<h3 class="anchored" data-anchor-id="assumption-1-influence-of-age-at-enrollment-on-academic-success">Assumption 1: Influence of Age at Enrollment on Academic Success</h3>
+<p>It is traditionally believed that age plays a important role in shaping a student’s academic success. Older students are often perceived to have a greater life experience and motivation, which could translate into academic proficiency. However, they might also have more responsibilities, such as employment or family.</p>
+<p>On the other hand, younger students, while potentially less experienced in life, might be more attuned to academic routines, which could foster their academic success.</p>
+<p>Our data visualization, however, unveils a more nuanced picture. It clearly suggests that students who enroll at a younger age have a notably higher probability of successfully graduating. This correlation between lower enrollment age and higher graduation rates is especially strong up to the age of 26.</p>
+<p>Post 26, we notice a smooth decrease in the rate of academic drop-off. This could potentially be attributed to increased stability in job and family commitments, allowing individuals to devote more time and effort towards their education.</p>
 <div class="cell" data-execution_count="42">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create a mapping dictionary</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mapping <span class="op">=</span> {<span class="dv">0</span>: <span class="st">'Evening'</span>, <span class="dv">1</span>: <span class="st">'Daytime'</span>}</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#make a copy of the dataframe to not change the original one</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df_copy <span class="op">=</span> df.copy()</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>df_copy[<span class="st">'Daytime/evening attendance'</span>] <span class="op">=</span> df_copy[<span class="st">'Daytime/evening attendance'</span>].<span class="bu">map</span>(mapping)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#create a grouped dataframe</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>grouped_df <span class="op">=</span> df_copy.groupby([<span class="st">'Daytime/evening attendance'</span>, <span class="st">'Target'</span>]).size().unstack()</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>grouped_df.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Student Status by Daytime/Evening Attendance'</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Daytime/Evening Attendance'</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Student Status'</span>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#get percentages</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>grouped_df <span class="op">=</span> grouped_df.div(grouped_df.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>), axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>grouped_df.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Student Status by Daytime/Evening Attendance'</span>)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Daytime/Evening Attendance'</span>)</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage (%)'</span>)</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Student Status'</span>)</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Histogram of Age at enrollment with Student Status</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>dropout_age <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Dropout'</span>][<span class="st">'Age at enrollment'</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>graduate_age <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Graduate'</span>][<span class="st">'Age at enrollment'</span>]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.hist([dropout_age, graduate_age], label<span class="op">=</span>[<span class="st">'Dropout'</span>, <span class="st">'Graduate'</span>])</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Age at Enrollment'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Age at Enrollment Distribution by Student Status'</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#create bins for ages</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> <span class="bu">range</span>(df[<span class="st">'Age at enrollment'</span>].<span class="bu">min</span>(), df[<span class="st">'Age at enrollment'</span>].<span class="bu">max</span>()<span class="op">+</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># create a DataFrame for dropouts</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Dropout'</span>][<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>).rename(<span class="st">'Dropout'</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">/=</span> df[<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>dropout_df <span class="op">*=</span> <span class="dv">100</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># percentage</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#graduates</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">=</span> df[df[<span class="st">'Target'</span>] <span class="op">==</span> <span class="st">'Graduate'</span>][<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>).rename(<span class="st">'Graduate'</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">/=</span> df[<span class="st">'Age at enrollment'</span>].value_counts(bins<span class="op">=</span>bins, sort<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>graduate_df <span class="op">*=</span> <span class="dv">100</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># combine them into a single DataFrame</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>percentage_df <span class="op">=</span> pd.concat([dropout_df, graduate_df], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>percentage_df.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Age at Enrollment'</span>)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage (%)'</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Percentage of Dropout and Graduate Students by Age at Enrollment'</span>)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+<p><img src="final_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+<p><img src="final_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="visualization-4-the-relation-between-marital-status-and-student-status" class="level3">
-<h3 class="anchored" data-anchor-id="visualization-4-the-relation-between-marital-status-and-student-status">Visualization 4: The relation between marital status and student status</h3>
-<p>Upon analyzing the first chart, it’s evident that students with a single status demonstrate the highest rate of successful graduation. However, the second chart, which presents the overall distribution of marital statuses of population, reveals a substantial imbalance in the dataset, with single students comprising the majority. As such, the previously drawn conclusion that single students are most likely to graduate may be influenced by this imbalance.</p>
+<section id="assumption-2-the-impact-of-first-semester-grades-on-student-status" class="level3">
+<h3 class="anchored" data-anchor-id="assumption-2-the-impact-of-first-semester-grades-on-student-status">Assumption 2: The Impact of First Semester Grades on Student Status</h3>
+<p>It’s commonly accepted that early academic performance, as indicated by first semester grades, significantly influences a student’s likelihood of successful graduation. This idea suggests that a strong start can create a strong foundation for success in studies.</p>
+<p>The box plot visualization affirms this assumption, indicating that higher first semester grades significantly boost the likelihood of successful graduation. This highlights the importance of supporting students early in their academic journey, aiding those who may struggle initially, thereby enhancing their overall chances of successful graduation.</p>
 <div class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#map the marital status</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_marital_status(status):</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> status <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Single'</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Married'</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">3</span>:</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Widower'</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">4</span>:</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Divorced'</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">5</span>:</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Facto Union'</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">6</span>:</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Legally Separated'</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Other'</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#function to the Marital Status column</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>df_copy[<span class="st">'Marital status'</span>] <span class="op">=</span> df_copy[<span class="st">'Marital status'</span>].<span class="bu">apply</span>(map_marital_status)</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#create a grouped dataframe</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>grouped_df_marital <span class="op">=</span> df_copy.groupby([<span class="st">'Marital status'</span>, <span class="st">'Target'</span>]).size().unstack()</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#normalize to get percentages and multiply by 100</span></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>grouped_df_marital <span class="op">=</span> grouped_df_marital.div(grouped_df_marital.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>), axis<span class="op">=</span><span class="dv">0</span>)<span class="op">*</span><span class="dv">100</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>grouped_df_marital.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Student Status by Marital Status'</span>)</span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Marital status'</span>)</span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage (%)'</span>)</span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Student Status'</span>)</span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co">#first let's visualize the number of people of each marital status</span></span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>df_copy[<span class="st">'Marital status'</span>].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Population Distribution by Marital Status'</span>)</span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Marital Status'</span>)</span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
-<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Boxplot of 'Curricular units 1st sem (grade)' divided by Student Status</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dropout_grade <span class="op">=</span> df[df[<span class="st">'Target'</span>]<span class="op">==</span><span class="st">'Dropout'</span>][<span class="st">'Curricular units 1st sem (grade)'</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>graduate_grade <span class="op">=</span> df[df[<span class="st">'Target'</span>]<span class="op">==</span><span class="st">'Graduate'</span>][<span class="st">'Curricular units 1st sem (grade)'</span>]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.boxplot([dropout_grade, graduate_grade], labels<span class="op">=</span>[<span class="st">'Dropout'</span>, <span class="st">'Graduate'</span>])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'First Semester Grade Distribution by Student Status'</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'First Semester Grade'</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+<p><img src="final_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="assumption-3-influence-of-class-scheduling-on-student-success" class="level3">
+<h3 class="anchored" data-anchor-id="assumption-3-influence-of-class-scheduling-on-student-success">Assumption 3: Influence of Class Scheduling on Student Success</h3>
+<p>There’s a prevalent belief that the timing of classes can affect a student’s academic success. This belief suggests that daytime students, being potentially have a greater efficiency in learning.</p>
+<p>The pie chart visualization confirms this assumption, showing that students attending daytime classes indeed have a significantly higher probability of successful graduation. This underscores the importance of time scheduling in the academic success of students and warrants further investigation into the specific biological and psychological factors that contribute to this phenomenon.</p>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_copy<span class="op">=</span>df.copy()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>daytime_counts <span class="op">=</span> df_copy[df_copy[<span class="st">'Daytime/evening attendance'</span>] <span class="op">==</span> <span class="dv">1</span>][<span class="st">'Target'</span>].value_counts()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>evening_counts <span class="op">=</span> df_copy[df_copy[<span class="st">'Daytime/evening attendance'</span>] <span class="op">==</span> <span class="dv">0</span>][<span class="st">'Target'</span>].value_counts()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#pie chart for Daytime students</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.pie(daytime_counts, labels <span class="op">=</span> daytime_counts.index, autopct<span class="op">=</span><span class="st">'</span><span class="sc">%1.1f%%</span><span class="st">'</span>, startangle<span class="op">=</span><span class="dv">140</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'equal'</span>) </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Daytime Students'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#pie chart for Evening students</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.pie(evening_counts, labels <span class="op">=</span> evening_counts.index, autopct<span class="op">=</span><span class="st">'</span><span class="sc">%1.1f%%</span><span class="st">'</span>, startangle<span class="op">=</span><span class="dv">140</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'equal'</span>) </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Evening Students'</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Distribution of Dropout and Graduate Students by Attendance Time'</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="assumption-4-impact-of-marital-status-on-academic-success" class="level3">
+<h3 class="anchored" data-anchor-id="assumption-4-impact-of-marital-status-on-academic-success">Assumption 4: Impact of Marital Status on Academic Success</h3>
+<p>There’s a common thought that a student’s marital status might change their success in school. Single students might have more time for studying since they don’t have a spouse or family responsibilities.</p>
+<p>Our data shows an interesting trend. The first chart shows that single students graduate more often. But when we look at the second chart, we see that there are a lot more single students than married ones in our data, which means our dataset is imbalanced. This imbalance suggests that we can’t draw a concrete conclusion about the impact of marital status on graduation rates as the data might be skewed.</p>
+<div class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#map the marital status</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map_marital_status(status):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> status <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Single'</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Married'</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Widower'</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">4</span>:</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Divorced'</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">5</span>:</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Facto Union'</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> status <span class="op">==</span> <span class="dv">6</span>:</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Legally Separated'</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'Other'</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co">#make groups</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>df_copy[<span class="st">'Marital status'</span>] <span class="op">=</span> df_copy[<span class="st">'Marital status'</span>].<span class="bu">apply</span>(map_marital_status)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>grouped_df_marital <span class="op">=</span> df_copy.groupby([<span class="st">'Marital status'</span>, <span class="st">'Target'</span>]).size().unstack()</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>grouped_df_marital <span class="op">=</span> grouped_df_marital.div(grouped_df_marital.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>), axis<span class="op">=</span><span class="dv">0</span>)<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co">#create a bar plot</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>grouped_df_marital.plot(kind<span class="op">=</span><span class="st">'bar'</span>, stacked<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Student Status by Marital Status'</span>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Marital status'</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percentage (%)'</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Student Status'</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="co">#first let's visualize the number of people of each marital status</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>df_copy[<span class="st">'Marital status'</span>].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Population Distribution by Marital Status'</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Marital Status'</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="final_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+<p><img src="final_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-
-
 </section>
 </section>
+<section id="answer-to-q2-assessing-correlations-between-target-and-other-variables" class="level2">
+<h2 class="anchored" data-anchor-id="answer-to-q2-assessing-correlations-between-target-and-other-variables">Answer to Q2: Assessing Correlations Between Target and Other Variables</h2>
+<p>Having examined some conventionally acknowledged predictors of student outcomes, we will now visualize all the variables in our dataset. Our goal is to evaluate the correlation between each variable and the student status. This comprehensive correlation assessment will help us identify the most significant determinants of a student’s academic trajectory.</p>
+<section id="cleaningprocessing-exclusion-of-unordered-columns" class="level3">
+<h3 class="anchored" data-anchor-id="cleaningprocessing-exclusion-of-unordered-columns">Cleaning&amp;Processing: Exclusion of Unordered Columns</h3>
+<p>Certain columns in our dataset represent unordered categorical variables. For instance, the fourth visualization in the previous section demonstrates an unordered category that lacks any logical order or hierarchy. In order to enhance the meaningfulness of our correlation visualization, we need to focus on columns that contain ordered categories or numerical values. Therefore, we will process our dataset to retain only these relevant columns.</p>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df_copy <span class="op">=</span> df.copy()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#columns to drop from exploring of dataset</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [<span class="st">'Marital status'</span>, <span class="st">'Application mode'</span>, <span class="st">'Application order'</span>, <span class="st">'Course'</span>, <span class="st">'Daytime/evening attendance'</span>, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'Previous qualification'</span>, <span class="st">'Nacionality'</span>, <span class="st">"Mother's qualification"</span>, <span class="st">"Father's qualification"</span>, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Mother's occupation"</span>, <span class="st">"Father's occupation"</span>]</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>df_copy <span class="op">=</span> df_copy.drop(columns<span class="op">=</span>columns_to_drop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualization-use-interactive-lib" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-use-interactive-lib">Visualization: use interactive lib</h3>
+<p>Using Plotly, we can make a visually appealing and informative visualization. It provides ample space for displaying the precise values of the correlation coefficients, as users can hover over each bar to examine the values in detail.</p>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This works in CKHUB, but may due to some reason not work in the webpage (compatibility of plotly lib in binder)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># corr = df_copy.corr()</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># import plotly.graph_objects as go</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># #create a bar chart</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># corr_target = corr['Target_encoded'].sort_values()</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fig = go.Figure(data=go.Bar(x=corr_target.index, y=corr_target.values))</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># fig.update_layout(title_text='Correlation of Variables with Target', </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#                   xaxis_title='Variables', </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#                   yaxis_title='Correlation coefficient',</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                   autosize=False,</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#                   width=800,</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#                   height=800,</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#                   margin=dict(l=50, r=50, b=100, t=100, pad=4))</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># fig.show()</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Therefore, here is the seaborn version</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>corr_target <span class="op">=</span> df_copy.corr()[<span class="st">'Target_encoded'</span>].sort_values()</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>)) <span class="co"># you can adjust the size as needed</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>sns.barplot(x<span class="op">=</span>corr_target.values, y<span class="op">=</span>corr_target.index)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Correlation coefficient'</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Variables'</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Correlation of Variables with Target'</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_1044/3793878396.py:2: FutureWarning:
+
+The default value of numeric_only in DataFrame.corr is deprecated. In a future version, it will default to False. Select only valid columns or specify the value of numeric_only to silence this warning.
+
+/tmp/ipykernel_1044/3793878396.py:19: FutureWarning:
+
+The default value of numeric_only in DataFrame.corr is deprecated. In a future version, it will default to False. Select only valid columns or specify the value of numeric_only to silence this warning.
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="f49a527d-9715-4883-9228-dcd05bb14133" class="plotly-graph-div" style="height:800px; width:800px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("f49a527d-9715-4883-9228-dcd05bb14133")) {                    Plotly.newPlot(                        "f49a527d-9715-4883-9228-dcd05bb14133",                        [{"x":["Age at enrollment","Debtor","Gender","Curricular units 2nd sem (without evaluations)","Curricular units 1st sem (without evaluations)","Inflation rate","Educational special needs","International","Unemployment rate","Curricular units 1st sem (credited)","Curricular units 2nd sem (credited)","GDP","Curricular units 1st sem (evaluations)","Displaced","Curricular units 2nd sem (evaluations)","Curricular units 1st sem (enrolled)","Curricular units 2nd sem (enrolled)","Scholarship holder","Tuition fees up to date","Curricular units 1st sem (grade)","Curricular units 1st sem (approved)","Curricular units 2nd sem (grade)","Curricular units 2nd sem (approved)","Target_encoded"],"y":[-0.31046680046515995,-0.2646592115872944,-0.24559089237520756,-0.10410168763622048,-0.07315488016812709,-0.03218291315303888,-0.010299410579487932,0.0077296140291351735,0.014660967359397698,0.02843900913574126,0.03598240039313555,0.04794528401774011,0.049285734067592964,0.10339172204556185,0.11138479594580095,0.1597823109693897,0.18355801369558009,0.30536570116295075,0.4300363758782087,0.5070726001069639,0.5538265688841265,0.5963243995875978,0.6484496164581953,1.0],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"text":"Correlation of Variables with Target"},"margin":{"l":50,"r":50,"b":100,"t":100,"pad":4},"xaxis":{"title":{"text":"Variables"}},"yaxis":{"title":{"text":"Correlation coefficient"}},"autosize":false,"width":800,"height":800},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('f49a527d-9715-4883-9228-dcd05bb14133');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="final_files/figure-html/cell-15-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="analysis-of-correlations" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-of-correlations">Analysis of correlations</h3>
+<p>We use the following standard cutoffs to categorize the strength of correlations: a strong correlation is indicated by a value greater than 0.5, a medium correlation falls between 0.25 and 0.5, and a weak correlation is represented by a value less than 0.25.</p>
+<p>Based on these criteria, we observe a number of correlations that align with traditionally held beliefs. For instance, the medium negative correlation between ‘Age at enrollment’ and the target (-0.3104668) suggests that older students may be more likely to drop out. This supports our earlier assumptions and aligns with our previous data visualization.</p>
+<p>For positive correlations, there is are strong correlations between ‘Curricular units (approved/graded)’ for both semesters and student status. The stronger values (0.5538, 0.5963, 0.6484) indicate a higher likelihood of graduation for students with more credited units or higher grades. Furthermore, the medium positive correlation (0.3053657) for ‘Scholarship holders’ suggests these students, often exhibiting superior academic performance, are more likely to graduate.</p>
+<p>In addition to these familiar correlations, our analysis uncovers some newer factors tied to student dropout rates. - ‘Debtor’ demonstrates a medium negative correlation (-0.26465921) with the target, hinting at a higher dropout likelihood for students in debt. Conversely, - ‘Tuition fees up to date’ shows a medium positive correlation (0.43003638), suggesting students maintaining current tuition payments are more likely to graduate. - ‘Gender’ has a negative medium strength correlation (-0.24559089), implying that male students may be more likely to drop out than famale students</p>
+<p>While these interpretations are very meaningful, it’s important to emphasize that <strong>correlation does not mean causation</strong>. Thorough investigation is required to fully comprehend these relationships and identify the root causes. For instance, the higher dropout rates among older students or those in debt could be attributed to financial constraints, familial obligations, and a bunch of other factors.</p>
+<p>One interesting finding is that, as an international student, I also don’t find a significant correlation between a student being international and the dropout rate.</p>
+</section>
+</section>
+<section id="answer-to-q3-impacts-of-social-and-economic-indicators-like-gdp-and-inflation-rate" class="level2">
+<h2 class="anchored" data-anchor-id="answer-to-q3-impacts-of-social-and-economic-indicators-like-gdp-and-inflation-rate">Answer to Q3: Impacts of social and economic indicators like GDP and inflation rate</h2>
+<p>Upon visualizing the correlation heatmap, we find no substantial linkage between social and economic factors (Unemployment rate, GDP, Inflation rate) and the various academic attributes of students.</p>
+<p>To gain a more complete understanding, we’d need to examine trends over a more extended period and possibly incorporate other data such as government education spending, socio-economic status of students’ families, and broader societal factors.</p>
+<p>Hence, while our current analysis does not indicate a substantial linkage, we cannot completely rule out the potential influences of social and economic conditions on student academic performance. Further research using a more comprehensive dataset covering longer time frames is recommended to explore these potential impacts more thoroughly.</p>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>corr <span class="op">=</span> df_copy.corr()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">9</span>))</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#create a custom diverging colormap</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> sns.diverging_palette(<span class="dv">230</span>, <span class="dv">20</span>, as_cmap<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr, cmap<span class="op">=</span>cmap, center<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_1044/48788898.py:4: FutureWarning:
+
+The default value of numeric_only in DataFrame.corr is deprecated. In a future version, it will default to False. Select only valid columns or specify the value of numeric_only to silence this warning.
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="final_files/figure-html/cell-16-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="answer-to-q4-discover-multicollinearity-of-independent-variables" class="level2">
+<h2 class="anchored" data-anchor-id="answer-to-q4-discover-multicollinearity-of-independent-variables">Answer to Q4: discover multicollinearity of independent variables</h2>
+<p>In our quest to understand student academic outcomes, we’re not just looking at individual factors but the intricate web of interactions among them. Moreover, exploring correlations among variables could help us to identify potential colinearity of two or more independent variables in a regression model are highly correlated.</p>
+<p>We will employ the correlation heatmap displayed above to detect potential multicollinearity among the independent variables.</p>
+<section id="analysis-1-displaced-and-age-at-enrollment" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-1-displaced-and-age-at-enrollment">Analysis 1: Displaced and Age at enrollment</h3>
+<p>The negative correlation of -0.323 between ‘Displaced’ and ‘Age at enrollment’ indicates a moderate, inverse relationship: younger students are more likely to be displaced, while older students are less so. This may be due to factors like economic instability or housing insecurity among younger students, or potentially greater stability or preparedness among older students returning to education.</p>
+<p>However, without further research, it’s uncertain if this correlation implies a causal link or simply reflects underlying variables. Understanding such relationships can help shape effective institutional support, especially for vulnerable, younger students. The ripple effect of these findings might also extend to areas like mental health, highlighting the need for better approaches.</p>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>correlation <span class="op">=</span> df[<span class="st">'Displaced'</span>].corr(df[<span class="st">'Age at enrollment'</span>])</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The correlation between 'Displaced' and 'Age at enrollment' is: </span><span class="sc">{</span>correlation<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The correlation between 'Displaced' and 'Age at enrollment' is: -0.3237735997464465</code></pre>
+</div>
+</div>
+</section>
+<section id="analysis-2-debtor-and-tuition-fees-up-to-date" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-2-debtor-and-tuition-fees-up-to-date">Analysis 2: Debtor and Tuition fees up to date</h3>
+<p>The negative correlation of -0.431 between ‘Debtor’ and ‘Tuition fees up to date’ indicates a moderately strong inverse relationship. Essentially, if a student is a debtor, it’s less likely their tuition fees are up to date, and vice versa. This makes intuitive sense, as being a debtor often implies facing financial hardships, which could hinder timely tuition payments. The presence of such colinearity indicates that these factors may not operate independently, but instead might exert a mutual influence.</p>
+<div class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>correlation <span class="op">=</span> df[<span class="st">'Debtor'</span>].corr(df[<span class="st">'Tuition fees up to date'</span>])</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The correlation between 'Debtor' and 'Tuition fees up to date' is: </span><span class="sc">{</span>correlation<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The correlation between 'Debtor' and 'Tuition fees up to date' is: -0.43166077929905516</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>Our analysis has yielded valuable insights into the various factors that can significantly impact student academic success. We explored several common assumptions and found that some were supported by empirical evidence.</p>
+<p>Additionally, through a comprehensive assessment of dataset, we uncovered new factors that influence student outcome. Interestingly, some findings confirmed our initial assumptions, such as the negative correlation between the age at enrollment and student graduation, as well as the positive correlation between credited units and student success.</p>
+<p>We also observed the importance of financial factors, such as student debt and timely tuition fee payments, in relation to student outcomes. However, it is essential to note that correlations do not imply causation, and further research is necessary to thoroughly understand these relationships.</p>
+<p>Regarding societal and economic indicators like GDP and unemployment rates, we did not find substantial correlations with student academic success. Nonetheless, it is important to consider that these factors may still have potential influences that requires more comprehensive research with larger datasets and longer timeframes.</p>
+<p>Additionally, our analysis of potential multicollinearity among variables revealed intriguing correlations. For instance, the inverse relationship between ‘Displaced’ and ‘Age at enrollment’, and the negative correlation between ‘Debtor’ and ‘Tuition fees up to date’, suggests possible mutual influences.</p>
+<p>In conclusion, our analysis demonstrates the complexity of predicting student academic outcome. A multitude of factors, including personal circumstances, academic performance, financial situation, and potentially broader societal factors, all interact in intricate ways to influence student academic success.</p>
+
+
 </section>
 
 </main> <!-- /main -->
